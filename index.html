@@ -4,550 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="./assets/logo.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
     <title>Santi Castillo - Video Game Composer</title>
-    <style>
-        body {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Courier New', monospace;
-            background: linear-gradient(45deg, #2c5aa0, #1e3a5f);
-            height: 100vh;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .desktop {
-            width: 100%;
-            height: 100vh;
-            position: relative;
-            background-image: 
-                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%);
-        }
-
-        .desktop-header {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            text-align: center;
-            color: white;
-            z-index: 50;
-        }
-
-        .composer-name {
-            font-size: 48px;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-            margin-bottom: 8px;
-            letter-spacing: 2px;
-        }
-
-        .composer-title {
-            font-size: 28px;
-            opacity: 0.9;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-            font-weight: normal;
-        }
-
-        .logo-container {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            width: 110px;
-            height: 110px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(5px);
-            z-index: 50;
-        }
-
-        .logo-placeholder {
-            color: rgba(255,255,255,0.7);
-            font-size: 12px;
-            text-align: center;
-            line-height: 1.2;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-        }
-
-        .logo-image {
-            max-width: 100%;
-            max-height: 100%;
-            filter: none;
-            background: #fff;
-            border-radius: 6px;
-            padding: 4px;
-        }
-
-        .taskbar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 40px;
-            background: linear-gradient(to bottom, #4a90e2, #2c5aa0);
-            border-top: 2px solid #6bb6ff;
-            display: flex;
-            align-items: center;
-            padding: 0 10px;
-            z-index: 1000;
-        }
-
-        .start-button {
-            background: linear-gradient(to bottom, #5cb85c, #449d44);
-            border: 2px outset #5cb85c;
-            color: white;
-            padding: 4px 12px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .time {
-            margin-left: auto;
-            color: white;
-            font-size: 12px;
-            background: rgba(0,0,0,0.3);
-            padding: 4px 8px;
-            border: 1px inset #4a90e2;
-        }
-
-        .desktop-icon {
-            position: absolute;
-            width: 80px;
-            height: 90px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            padding: 10px;
-            border-radius: 4px;
-            transition: background-color 0.2s;
-        }
-
-        .desktop-icon:hover {
-            background-color: rgba(255,255,255,0.1);
-        }
-
-        .desktop-icon.selected {
-            background-color: rgba(0,100,200,0.3);
-            border: 1px dotted white;
-        }
-
-        .icon-image {
-            width: 48px;
-            height: 48px;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-            border-radius: 8px;
-            border: 2px outset #ddd;
-        }
-
-        .icon-label {
-            color: white;
-            font-size: 18px;
-            text-align: center;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-            line-height: 1.2;
-        }
-
-        .window {
-            position: absolute;
-            background: #c0c0c0;
-            border: 2px outset #c0c0c0;
-            min-width: 520px;
-            min-height: 380px;
-            display: none;
-            z-index: 100;
-        }
-
-        .window.active {
-            display: block;
-            z-index: 200;
-        }
-
-        .window-header {
-            background: linear-gradient(to right, #0066cc, #004499);
-            color: white;
-            padding: 4px 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: move;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .window-controls {
-            display: flex;
-            gap: 2px;
-        }
-
-        .window-button {
-            width: 16px;
-            height: 14px;
-            background: #c0c0c0;
-            border: 1px outset #c0c0c0;
-            font-size: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .window-button:hover {
-            background: #e0e0e0;
-        }
-
-        .window-content {
-            padding: 16px;
-            height: calc(100% - 40px);
-            overflow-y: auto;
-            background: #c0c0c0;
-            font-size: 20px;
-        }
-
-        .music-player {
-            width: 900px;
-            height: 600px;
-        }
-
-        .player-header {
-            background: linear-gradient(to bottom, #f0f0f0, #d0d0d0);
-            padding: 8px;
-            border-bottom: 1px solid #999;
-            display: flex;
-            gap: 10px;
-        }
-
-        .genre-tab {
-            padding: 6px 12px;
-            background: #e0e0e0;
-            border: 1px outset #e0e0e0;
-            cursor: pointer;
-            font-size: 11px;
-            font-weight: bold;
-        }
-
-        .genre-tab.active {
-            background: #c0c0c0;
-            border: 1px inset #c0c0c0;
-        }
-
-        .track-list {
-            height: 300px;
-            overflow-y: auto;
-            background: white;
-            border: 1px inset #c0c0c0;
-        }
-
-        .track-item {
-            padding: 8px 12px;
-            border-bottom: 1px solid #eee;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 18px;
-        }
-
-        .track-item:hover {
-            background: #e6f3ff;
-        }
-
-        .track-item.playing {
-            background: #cce7ff;
-            font-weight: bold;
-        }
-
-        .player-controls {
-            padding: 12px;
-            background: #f0f0f0;
-            border-top: 1px solid #999;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .control-button {
-            width: 32px;
-            height: 24px;
-            background: #e0e0e0;
-            border: 1px outset #e0e0e0;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-        }
-
-        .control-button:active {
-            border: 1px inset #e0e0e0;
-        }
-
-        .progress-bar {
-            flex: 1;
-            height: 20px;
-            background: white;
-            border: 1px inset #c0c0c0;
-            position: relative;
-            margin: 0 10px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(to bottom, #4a90e2, #2c5aa0);
-            width: 0%;
-            transition: width 0.1s;
-        }
-
-        .volume-control {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 10px;
-        }
-
-        .about-window {
-            width: 750px;
-            height: 600px;
-        }
-
-        .about-content {
-            text-align: center;
-            font-size: 18px;
-            line-height: 1.6;
-        }
-
-        .profile-image {
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            color: white;
-            border: 3px solid #999;
-        }
-
-        .contact-window {
-            width: 600px;
-            height: 450px;
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-            font-size: 18px;
-        }
-
-        .contact-icon {
-            width: 24px;
-            height: 24px;
-            background: #4a90e2;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-
-        .now-playing {
-            font-size: 11px;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        @media (max-width: 600px) {
-            body, .desktop {
-                min-width: 100vw;
-                min-height: 100vh;
-                overflow-x: hidden;
-            }
-            .desktop-header {
-                position: static;
-                transform: none;
-                padding-top: 12px;
-                font-size: 14px;
-            }
-            .composer-name {
-                font-size: 28px;
-                margin-bottom: 4px;
-            }
-            .composer-title {
-                font-size: 16px;
-            }
-            .logo-container {
-                position: static;
-                width: 70px;
-                height: 70px;
-                margin: 10px auto 0 auto;
-            }
-            .logo-image {
-                max-width: 90%;
-                max-height: 90%;
-                padding: 2px;
-            }
-            .desktop-icon {
-                position: static !important;
-                width: 60px;
-                height: 70px;
-                margin: 10px 8px;
-                padding: 6px;
-                font-size: 12px;
-                flex-direction: column;
-                display: inline-flex;
-            }
-            .icon-image {
-                width: 32px;
-                height: 32px;
-                font-size: 18px;
-                margin-bottom: 4px;
-            }
-            .icon-label {
-                font-size: 12px;
-            }
-            .window {
-                min-width: 90vw;
-                min-height: 60vh;
-                width: 96vw !important;
-                height: 80vh !important;
-                left: 2vw !important;
-                top: 10vh !important;
-                font-size: 14px;
-                padding: 0;
-            }
-            .window-header {
-                font-size: 10px;
-                padding: 4px 4px;
-            }
-            .window-content {
-                padding: 8px;
-                font-size: 14px;
-                height: calc(100% - 32px);
-            }
-            .music-player,
-            .about-window,
-            .contact-window,
-            #portfolioWindow {
-                width: 96vw !important;
-                height: 80vh !important;
-                left: 2vw !important;
-                top: 10vh !important;
-                min-width: unset;
-                min-height: unset;
-            }
-            .player-header {
-                gap: 4px;
-                padding: 4px;
-                font-size: 10px;
-            }
-            .genre-tab {
-                font-size: 10px;
-                padding: 4px 6px;
-            }
-            .track-list {
-                height: 120px;
-                font-size: 12px;
-            }
-            .track-item {
-                font-size: 12px;
-                padding: 6px 6px;
-            }
-            .player-controls {
-                gap: 4px;
-                padding: 6px;
-                font-size: 10px;
-            }
-            .control-button {
-                width: 24px;
-                height: 18px;
-                font-size: 10px;
-            }
-            .progress-bar {
-                height: 12px;
-                margin: 0 4px;
-            }
-            .volume-control {
-                font-size: 10px;
-                width: 60px;
-            }
-            .about-content {
-                font-size: 13px;
-            }
-            .profile-image {
-                width: 70px;
-                height: 70px;
-                font-size: 24px;
-                margin-bottom: 10px;
-            }
-            .contact-item {
-                font-size: 13px;
-                gap: 6px;
-                padding: 6px;
-            }
-            .contact-icon {
-                width: 18px;
-                height: 18px;
-                font-size: 10px;
-            }
-            #portfolioWindow .window-content > div {
-                grid-template-columns: 1fr !important;
-                gap: 8px !important;
-                font-size: 10px !important;
-            }
-            #portfolioWindow h4 {
-                font-size: 13px !important;
-            }
-            #portfolioWindow p {
-                font-size: 10px !important;
-            }
-            .taskbar {
-                height: 32px;
-                font-size: 10px;
-                padding: 0 4px;
-            }
-            .start-button {
-                font-size: 10px;
-                padding: 2px 6px;
-            }
-            .time {
-                font-size: 10px;
-                padding: 2px 4px;
-            }
-        }
-    </style>
 </head>
 <body>
     <div class="desktop" id="desktop">
-        <!-- Header con nombre y logo -->
         <div class="desktop-header">
             <div class="composer-name">SANTI CASTILLO</div>
             <div class="composer-title">Video Game Composer</div>
         </div>
         
-        <!-- Contenedor del logo -->
         <div class="logo-container">
             <img src="./assets/logo.jpg" alt="Santi Castillo Logo" class="logo-image">
         </div>
 
-        <!-- Iconos del escritorio -->
         <div class="desktop-icon" style="top: 120px; left: 50px;" onclick="openWindow('musicPlayer')">
             <div class="icon-image">🎵</div>
             <div class="icon-label">Music Player</div>
@@ -568,7 +38,6 @@
             <div class="icon-label">Game Projects</div>
         </div>
 
-        <!-- Ventana del reproductor de música -->
         <div class="window music-player" id="musicPlayer" style="top: 100px; left: 200px;">
             <div class="window-header">
                 <span>🎵 Santi Castillo Music Player</span>
@@ -584,7 +53,7 @@
                 </div>
                 
                 <div class="track-list" id="trackList">
-                    <!-- Las canciones se cargarán aquí -->
+                    <!-- Canciones-->
                 </div>
                 
                 <div class="player-controls">
@@ -603,7 +72,6 @@
             </div>
         </div>
 
-        <!-- Ventana About -->
         <div class="window about-window" id="aboutWindow" style="top: 150px; left: 300px;">
             <div class="window-header">
                 <span>👤 About Santi Castillo</span>
@@ -623,7 +91,6 @@
             </div>
         </div>
 
-        <!-- Ventana Contact -->
         <div class="window contact-window" id="contactWindow" style="top: 200px; left: 400px;">
             <div class="window-header">
                 <span>📧 Contact Information</span>
@@ -671,7 +138,6 @@
             </div>
         </div>
 
-        <!-- Ventana Portfolio -->
         <div class="window" id="portfolioWindow" style="top: 120px; left: 250px; width: 850px; height: 600px;">
             <div class="window-header">
                 <span>🎮 Game Projects Portfolio</span>
@@ -713,10 +179,26 @@
         </div>
     </div>
 
-    <!-- Barra de tareas -->
     <div class="taskbar">
-        <div class="start-button">Inicio</div>
+        <div class="start-button" onclick="toggleStartMenu()">Inicio</div>
         <div class="time" id="clock"></div>
+        <div class="start-menu" id="startMenu">
+            <div class="start-menu-header">Santi Castillo</div>
+            <div class="start-menu-list">
+                <div class="start-menu-item" onclick="openWindow('musicPlayer');toggleStartMenu()">
+                    🎵 Music Player
+                </div>
+                <div class="start-menu-item" onclick="openWindow('aboutWindow');toggleStartMenu()">
+                    👤 About Santi
+                </div>
+                <div class="start-menu-item" onclick="openWindow('contactWindow');toggleStartMenu()">
+                    📧 Contact
+                </div>
+                <div class="start-menu-item" onclick="openWindow('portfolioWindow');toggleStartMenu()">
+                    🎮 Game Projects
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -779,7 +261,7 @@
             trackList.innerHTML = tracks.map((track, index) => `
                 <div class="track-item ${index === currentTrack ? 'playing' : ''}" onclick="selectTrack(${index})">
                     <div>
-                        <div style="font-weight: bold;">${track.title}</div>
+                        <div style="font-weight: bold; font-size: 1.25rem;">${track.title}</div>
                         <div style="font-size: 12px; color: #666;">${track.game}</div>
                     </div>
                     <div>${track.duration}</div>
@@ -953,6 +435,21 @@
                 document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
                 this.classList.add('selected');
             });
+        });
+
+        // Start menu toggle
+        function toggleStartMenu() {
+            const menu = document.getElementById('startMenu');
+            menu.classList.toggle('active');
+        }
+
+        // Cerrar menú si se hace click fuera
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('startMenu');
+            const startBtn = document.querySelector('.start-button');
+            if (!menu.contains(e.target) && !startBtn.contains(e.target)) {
+                menu.classList.remove('active');
+            }
         });
     </script>
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'987660d8d78ee9b6',t:'MTc1OTI2MzE3OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
